@@ -8,4 +8,9 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  runtimeConfig: {
+    public: {
+      fplBaseUrl: process.env.NUXT_PUBLIC_FPL_BASE_URL,
+    },
+  },
 })
