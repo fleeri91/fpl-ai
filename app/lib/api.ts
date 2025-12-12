@@ -7,12 +7,27 @@ import type { PicksRoot } from '~/types/fpl/Picks'
 
 export const createFplFetcher = () => {
   const config = useRuntimeConfig()
-  return axios.create({
+
+  const fplFetcher = axios.create({
     baseURL: config.public.fplBaseUrl,
     timeout: 10000,
   })
-}
 
+  // Add global response delay for UX
+  fplFetcher.interceptors.response.use(
+    async (response) => {
+      // Artificial delay (e.g., 0.8s)
+      await new Promise((resolve) => setTimeout(resolve, 800))
+      return response
+    },
+    (error) => {
+      // Pass errors through immediately
+      return Promise.reject(error)
+    }
+  )
+
+  return fplFetcher
+}
 export const fetchBootstrapStatic = async (): Promise<BootstrapStaticRoot> => {
   const fplFetcher = createFplFetcher()
   const res = await fplFetcher.get<BootstrapStaticRoot>('bootstrap-static/')
